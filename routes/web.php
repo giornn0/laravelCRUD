@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,16 +11,4 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    $cliente =["nombre"=>"cliente1","apellido"=>"apellido","email"=>"mail"];
-    $cliente["nombre"]="ahora tiene otro nombre";
-   return $cliente;
-});
-Route::get('/clientes',function(){
-    return'clientes';
-});
-Route::get('/jiji',function(){
-    return'clientes';
-});
 

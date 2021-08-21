@@ -14,26 +14,46 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// routes/api.php
+
+//All the authentication routes
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\DB;
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/login', [AuthController::class,'login']);
+
+Route::get('unlogged', function (){
+    return response()->json($data=['mensaje'=>'No se encuentra logeado, por favor inicie sesion'],$status=401);
+});
+Route::get('/logout/{id}',function($id){
+    DB::delete('delete from personal_access_tokens where tokenable_id = ?', [$id]);
+    return response()->json($data=['mensaje'=>'Sesion cerrada correctamente'],$status=200);
+});
+
+
+Route::get('/user', function (Request $request) {
     return $request->user();
 });
+
 //http://localhost:8000/api/clientes
 use App\Http\Controllers\ClienteController;
-Route::resource('/clientes',ClienteController::class);
+Route::resource('/clientes',ClienteController::class)->middleware('auth:sanctum');
 // http://localhost:8000/api/productos
 use App\Http\Controllers\ProductoController;
-Route::resource('/productos',ProductoController::class);
+Route::resource('/productos',ProductoController::class)->middleware('auth:sanctum');
 // http://localhost:8000/api/producto/{id}/etiquetas
 use App\Http\Controllers\EtiquetaProductoController;
-Route::resource('/producto/{id}/etiquetas', EtiquetaProductoController::class);
+Route::resource('/producto/{id}/etiquetas', EtiquetaProductoController::class)->middleware('auth:sanctum');
 //http://localhost:8000/api/etiqueta_productos
 use App\Http\Controllers\EtiquetaController;
-Route::resource('/etiquetas_producto',EtiquetaController::class);
+Route::resource('/etiquetas_producto',EtiquetaController::class)->middleware('auth:sanctum');
 //http://localhost:8000/api/ventas
 use App\Http\Controllers\VentaController;
-Route::resource('/ventas',VentaController::class);
+Route::resource('/ventas',VentaController::class)->middleware('auth:sanctum');
 //http://localhost:8000/api/ventas/{id}/productos_comprados
 use App\Http\Controllers\ProductoVentaController;
-Route::resource('/ventas/{id}/productos_comprados',ProductoVentaController::class);
+Route::resource('/ventas/{id}/productos_comprados',ProductoVentaController::class)->middleware('auth:sanctum');
 
 
