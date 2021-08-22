@@ -32,6 +32,7 @@ Route::middleware(['cors'])->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
     
     Route::post('/login', [AuthController::class,'login']);
+
     
     Route::get('unlogged', function (){
         return response()->json($data=['mensaje'=>'No se encuentra logeado, por favor inicie sesion'],$status=401);
@@ -45,7 +46,11 @@ Route::middleware(['cors'])->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::middleware(['auth:sanctum'])->group(function(){        
+    Route::middleware(['auth:sanctum'])->group(function(){
+        //Verificar estado del loggin        
+        Route::get('/logstatus', function(){
+            return response()->json($data=['mensaje'=>'Usuario logeado',$status=200]);
+        });
         //http://localhost:8000/api/clientes
         Route::resource('/clientes',ClienteController::class);
         // http://localhost:8000/api/productos
