@@ -28,50 +28,45 @@ use App\Http\Controllers\EtiquetaController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ProductoVentaController;
 
-Route::middleware(['cors'])->group(function(){
+Route::middleware(['cors'])->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
-    
-    Route::post('/login', [AuthController::class,'login']);
 
-    
-    Route::get('unlogged', function (){
-        return response()->json($data=['mensaje'=>'No se encuentra logeado, por favor inicie sesion'],$status=401);
+    Route::post('/login', [AuthController::class, 'login']);
+
+
+    Route::get('unlogged', function () {
+        return response()->json($data = ['mensaje' => 'No se encuentra logeado, por favor inicie sesion'], $status = 401);
     });
-    Route::get('/logout/{id}',function($id){
+    Route::delete('/logout/{id}', function ($id) {
         DB::delete('delete from personal_access_tokens where tokenable_id = ?', [$id]);
-        return response()->json($data=['mensaje'=>'Sesion cerrada correctamente'],$status=200);
+        return response()->json($data = ['mensaje' => 'Sesion cerrada correctamente'], $status = 200);
     });
-    
-    
+
+
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::middleware(['auth:sanctum'])->group(function(){
+    Route::middleware(['auth:sanctum'])->group(function () {
         //Verificar estado del loggin        
-        Route::get('/logstatus', function(){
-            return response()->json($data=['mensaje'=>'Usuario logeado',$status=200]);
+        Route::get('/logstatus', function () {
+            return response()->json($data = ['mensaje' => 'Usuario logeado', $status = 200]);
         });
         //http://localhost:8000/api/clientes
-        Route::resource('/clientes',ClienteController::class);
+        Route::resource('/clientes', ClienteController::class);
         // http://localhost:8000/api/productos
-        
-        Route::resource('/productos',ProductoController::class);
+
+        Route::resource('/productos', ProductoController::class);
         // http://localhost:8000/api/producto/{id}/etiquetas
-        
+
         Route::resource('/producto/{id}/etiquetas', EtiquetaProductoController::class);
         //http://localhost:8000/api/etiqueta_productos
-        
-        Route::resource('/etiquetas_producto',EtiquetaController::class);
+
+        Route::resource('/etiquetas_prod', EtiquetaController::class);
         //http://localhost:8000/api/ventas
-        
-        Route::resource('/ventas',VentaController::class);
+
+        Route::resource('/ventas', VentaController::class);
         //http://localhost:8000/api/ventas/{id}/productos_comprados
-        
-        Route::resource('/ventas/{id}/productos_comprados',ProductoVentaController::class);   
 
-    });    
-});    
-
-
-
-
+        Route::resource('/venta/{id}/productos_comprados', ProductoVentaController::class);
+    });
+});
