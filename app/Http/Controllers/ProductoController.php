@@ -58,7 +58,7 @@ class ProductoController extends Controller
     public function show($id)
     {
         try {
-            $producto = Producto::findOrfail('id', '=', $id);
+            $producto = Producto::findOrfail( $id);
             $etiquetas = EtiquetaProducto::where('producto_id', '=', $id);
             return response()->json($data = [$producto, $etiquetas], $status = 200);
         } catch (\Throwable $th) {
