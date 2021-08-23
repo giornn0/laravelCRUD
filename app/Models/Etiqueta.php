@@ -12,4 +12,7 @@ class Etiqueta extends Model
     public function productos(){
         return $this->belongsToMany(Producto::class);
     }
+    public $rules = array(
+        'nombre'=>'required|max:55'
+    );
 }

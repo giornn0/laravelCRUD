@@ -35,10 +35,6 @@ class EtiquetaProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $inventario = request()->all();
-        return $inventario;
-        // EtiquetaProducto::insert($inventario);
-        // return 'Inventaria creado correctamente';
     }
 
     /**
@@ -49,8 +45,7 @@ class EtiquetaProductoController extends Controller
      */
     public function show($id_producto)
     {
-        $inventarios = EtiquetaProducto::where('product_id','=',$id_producto);
-        return $inventarios;
+        
     }
 
     /**
@@ -62,10 +57,6 @@ class EtiquetaProductoController extends Controller
      */
     public function update(Request $request,$id_producto)
     {
-        $inventarios =request()->all();
-        EtiquetaProducto::where('product_id','=',$id_producto)->destroy();
-        EtiquetaProducto::insert($inventarios);
-        return 'Etiquetas editadas correctamente';
     }
 
     /**
@@ -76,7 +67,5 @@ class EtiquetaProductoController extends Controller
      */
     public function destroy($id_producto, $id_inv)
     {
-        EtiquetaProducto::where('product_id','=',$id_producto)->destroy();
-        return 'Etiquetas destruidas correctamente!';
     }
 }

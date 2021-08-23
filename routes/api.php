@@ -51,22 +51,20 @@ Route::middleware(['cors'])->group(function () {
         Route::get('/logstatus', function () {
             return response()->json($data = ['mensaje' => 'Usuario logeado', $status = 200]);
         });
+
         //http://localhost:8000/api/clientes
         Route::resource('/clientes', ClienteController::class);
+
         // http://localhost:8000/api/productos
-
         Route::resource('/productos', ProductoController::class);
-        // http://localhost:8000/api/producto/{id}/etiquetas
 
-        Route::resource('/producto/{id}/etiquetas', EtiquetaProductoController::class);
         //http://localhost:8000/api/etiqueta_productos
-
         Route::resource('/etiquetas_prod', EtiquetaController::class);
+
         //http://localhost:8000/api/ventas
-
         Route::resource('/ventas', VentaController::class);
-        //http://localhost:8000/api/ventas/{id}/productos_comprados
 
+        //http://localhost:8000/api/ventas/{id}/productos_comprados
         Route::resource('/venta/{id}/productos_comprados', ProductoVentaController::class);
     });
 });

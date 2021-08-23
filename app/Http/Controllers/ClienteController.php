@@ -13,10 +13,15 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $datos['clientes']= Cliente::all();
-        return $datos;
+        $page = $request->query('page');
+        if ($page and is_numeric($page)) {
+            $datos = Cliente::paginate(5);
+            return response()->json($data = array($datos), $status = 200);
+        }
+        $datos['clientes'] = Cliente::all();
+        return response()->json($data = array($datos), $status = 200);
     }
 
     /**
@@ -25,20 +30,18 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        // $validator = Validator::make($cliente, [
-        //     'email' => 'required|unique:clientes|max:255',
-        //     'nombre' => 'required|max:255',
-        //     'apellido' => 'required|max:255',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return 'error en la creacion de cliente!';
-        // }
         $cliente = request()->all();
-        Cliente::create($cliente);
-        return 'Creado con suceso!';
+        $model = new Cliente();
+        $validator = Validator::make($cliente, $model->rules);
+
+        if ($validator->fails()) {
+            return response()->json($data = ['error' => $validator->errors()], $status = 500);
+        } else {
+            Cliente::create($cliente);
+            return response()->json($data = ['message' => 'Cliente creado correctamente'], $status = 201);
+        }
     }
 
     /**
@@ -49,9 +52,12 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        //
-        $cliente = Cliente::findOrFail($id);
-        return $cliente;
+        try {
+            $cliente = Cliente::findOrFail($id);
+            return response()->json($data = $cliente, $status = 200);
+        } catch (\Throwable $th) {
+            return response()->json($data =['message' => 'Error trtando de encontrar el cliente'], $status = 500);
+        }
     }
 
     /**
@@ -61,12 +67,18 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         //
         $editCliente = request()->all();
-        Cliente::where('id','=',$id)->update($editCliente);
-        return 'Editado con suceso!';
+        $model = new Cliente;
+        $validator = Validator($editCliente, $model->rules);
+        if ($validator->fails()) {
+            return response()->json($data = ['error' => $validator->errors()]);
+        } else {
+            Cliente::where('id', '=', $id)->update($editCliente);
+            return response()->json($data = ['messsage' => 'Cliente editado correctamente'], $status = 202);
+        }
     }
 
     /**
@@ -78,6 +90,6 @@ class ClienteController extends Controller
     public function destroy($id)
     {
         Cliente::truncate($id);
-        return 'Eliminado con exito!';
+        return response()->json($data = ['message' => 'Cliente eliminado correctamente'], $status = 200);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProductoVenta;
 use App\Models\Venta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class VentaController extends Controller
 {
@@ -28,12 +29,16 @@ class VentaController extends Controller
      */
     public function store(Request $request)
     {
-        $venta = Venta::create(request()->except('productos'));
-        $productos =  array(array('id' => 1, 'cantidad' => 20, 'precio' => 20, 'total' => 400), array('id' => 2, 'cantidad' => 20, 'precio' => 20, 'total' => 400), array('id' => 3, 'cantidad' => 20, 'precio' => 20, 'total' => 400), array('id' => 4, 'cantidad' => 20, 'precio' => 20, 'total' => 400),);
-        foreach ($productos as $producto) {
-            ProductoVenta::create(['venta_id' => $venta['id'], 'producto_id' => $producto['id'], 'cantidad' => $producto['cantidad'], 'precio' => $producto['precio'], 'total' => $producto['total']]);
+        $venta =request()->all();
+        $model = new Venta();
+        $validator = Validator::make($venta, $model->rules);
+        if($validator->fails()){
+            return response()->json($data = ['error' => $validator->errors()],$status=500);
         }
-        return 'Venta cargada correctamente!';
+        else{
+            Venta::create($venta);
+            return 'Venta cargada correctamente!';
+        }
     }
 
     /**

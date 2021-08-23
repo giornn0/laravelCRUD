@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductoVenta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductoVentaController extends Controller
 {
@@ -12,10 +13,14 @@ class ProductoVentaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($id_venta)
     {
-        echo $id;
-        echo 'index de los productos comprados';
+        try {
+            $datos = ProductoVenta::where('factura_venta_id', '=', $id_venta);
+            return response()->json($data = $datos, $status = 200);
+        } catch (\Throwable $th) {
+            return response()->json($data = ['message' => 'Error intentando encontrar los productos'], $status = 500);
+        }
     }
 
 
@@ -25,12 +30,18 @@ class ProductoVentaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$id_venta)
+    public function store(Request $request, $id_venta)
     {
-        $ProductoVentado = request()->all();
-        $ProductoVentado['factura_venta_id']=$id_venta;
-        ProductoVenta::insert($ProductoVentado);
-        return 'Producto cargado correctamente!';
+        $productoVenta = request()->all();
+        $productoVenta['factura_venta_id'] = $id_venta;
+        $model = new ProductoVenta();
+        $validator = Validator::make($productoVenta, $model->rules);
+        if ($validator->fails()) {
+            return response()->json($data = ['error' => $validator->errors()], $status = 500);
+        } else {
+            ProductoVenta::create($productoVenta);
+            return response()->json($data = ['message' => 'Producto vargado correctamente en la venta'], $status = 201);
+        }
     }
 
     /**
@@ -41,8 +52,6 @@ class ProductoVentaController extends Controller
      */
     public function show($id_venta)
     {
-         $datos = ProductoVenta::where('factura_venta_id','=',$id_venta);
-         return $datos;
     }
 
 
@@ -53,11 +62,17 @@ class ProductoVentaController extends Controller
      * @param  \App\Models\ProductoVenta  $ProductoVenta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id_venta, $id_product)
+    public function update(Request $request, $id_venta, $id_product)
     {
         $productoEditado = request()->all();
-        ProductoVenta::where([['id','=',$id_product],['factura_venta_id','=',$id_venta]])->update($productoEditado);
-        return 'Producto de la compra editado correctamente!';
+        $model = new ProductoVenta;
+        $validator = Validator::make($productoEditado, $model->rules);
+        if ($validator->fails()) {
+            return response()->json($data = ['error' => $validator->errors()], $status = 500);
+        } else {
+            ProductoVenta::where([['id', '=', $id_product], ['factura_venta_id', '=', $id_venta]])->update($productoEditado);
+            return response()->json($data = ['message' => 'Producto de la venta editado correctamente!'], $status = 202);
+        }
     }
 
     /**
@@ -68,7 +83,11 @@ class ProductoVentaController extends Controller
      */
     public function destroy($id_venta, $id_product)
     {
-        ProductoVenta::destroy($id_product);
-        return 'Producto de la compra eliminado correctamente';
+        try {
+            ProductoVenta::destroy($id_product);
+            return response()->json($data = ['message' => 'Producto de la venta eliminado correctamente'], $status = 200);
+        } catch (\Throwable $th) {
+            return response()->json($data = ['message' => 'Error al intentar eliminar el producto'], $status = 500);
+        }
     }
 }
