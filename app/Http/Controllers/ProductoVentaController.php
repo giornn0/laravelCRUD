@@ -33,7 +33,7 @@ class ProductoVentaController extends Controller
     public function store(Request $request, $id_venta)
     {
         $productoVenta = request()->all();
-        $productoVenta['factura_venta_id'] = $id_venta;
+        $productoVenta['venta_id'] = $id_venta;
         $model = new ProductoVenta();
         $validator = Validator::make($productoVenta, $model->rules);
         if ($validator->fails()) {
