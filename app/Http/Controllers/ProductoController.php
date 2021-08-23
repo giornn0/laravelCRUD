@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\EtiquetaProducto;
 
 class ProductoController extends Controller
 {
@@ -58,7 +59,8 @@ class ProductoController extends Controller
     {
         try {
             $producto = Producto::findOrfail('id', '=', $id);
-            return response()->json($data = $producto, $status = 200);
+            $etiquetas = EtiquetaProducto::where('producto_id', '=', $id);
+            return response()->json($data = [$producto, $etiquetas], $status = 200);
         } catch (\Throwable $th) {
             return response()->json($data = ['message' => 'Error intentando encontrar el producto'], $status = 404);
         }
@@ -81,7 +83,11 @@ class ProductoController extends Controller
         } else {
             $etiquetas = request()->only('etiquetas');
             Producto::where('id', '=', $id)->update(request()->except('etiquetas'));
-            $producto = Producto::findOrfail($id);
+            EtiquetaProducto::where('product_id', '=', $id)->destroy();
+            $producto = Producto::findOrfail('id', '=', $id);
+            foreach ($etiquetas as $etiqueta) {
+                $producto->etiquetas()->attach($etiqueta);
+            }
             return response()->json($data = ['message' => 'Producto editado correctamente'], $status = 202);
         }
     }
