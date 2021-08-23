@@ -65,6 +65,6 @@ Route::middleware(['cors'])->group(function () {
         Route::resource('/ventas', VentaController::class);
 
         //http://localhost:8000/api/ventas/{id}/productos_comprados
-        Route::resource('/ventas/{id}/productos_comprados', ProductoVentaController::class);
+        Route::resource('/ventas/{id}/productos_ventas', ProductoVentaController::class);
     });
 });
