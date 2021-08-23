@@ -16,7 +16,7 @@ class ProductoVentaController extends Controller
     public function index($id_venta)
     {
         try {
-            $datos = ProductoVenta::where('factura_venta_id', '=', $id_venta);
+            $datos = ProductoVenta::where('venta_id', '=', $id_venta);
             return response()->json($data = $datos, $status = 200);
         } catch (\Throwable $th) {
             return response()->json($data = ['message' => 'Error intentando encontrar los productos'], $status = 500);
@@ -70,7 +70,7 @@ class ProductoVentaController extends Controller
         if ($validator->fails()) {
             return response()->json($data = ['error' => $validator->errors()], $status = 500);
         } else {
-            ProductoVenta::where([['id', '=', $id_product], ['factura_venta_id', '=', $id_venta]])->update($productoEditado);
+            ProductoVenta::where([['id', '=', $id_product], ['venta_id', '=', $id_venta]])->update($productoEditado);
             return response()->json($data = ['message' => 'Producto de la venta editado correctamente!'], $status = 202);
         }
     }
