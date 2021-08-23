@@ -17,7 +17,7 @@ class EtiquetaController extends Controller
     {
         try {
             $datos['etiquetas'] = Etiqueta::all();
-            return $datos;
+            return response($data = $datos, $status = 200);
         } catch (\Throwable $th) {
             return response()->json($data = ['message' => 'Error uscando el indice de etiquetas'], $status = 500);
         }

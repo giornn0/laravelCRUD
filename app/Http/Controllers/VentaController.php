@@ -16,8 +16,8 @@ class VentaController extends Controller
      */
     public function index()
     {
-        $datos['ventas'] = Venta::paginate(5);
-        return $datos;
+        $datos = Venta::paginate(5);
+        return response()->json($data = $datos, $status = 200);
     }
 
 
@@ -29,15 +29,14 @@ class VentaController extends Controller
      */
     public function store(Request $request)
     {
-        $venta =request()->all();
+        $venta = request()->all();
         $model = new Venta();
         $validator = Validator::make($venta, $model->rules);
-        if($validator->fails()){
-            return response()->json($data = ['error' => $validator->errors()],$status=500);
-        }
-        else{
+        if ($validator->fails()) {
+            return response()->json($data = ['error' => $validator->errors()], $status = 500);
+        } else {
             Venta::create($venta);
-            return 'Venta cargada correctamente!';
+            return response()->json($data = ['message' => 'Venta cargada correctamente!'], $status = 201);
         }
     }
 
@@ -49,8 +48,12 @@ class VentaController extends Controller
      */
     public function show($id)
     {
-        $venta = Venta::findOrFail($id);
-        return $venta;
+        try {
+            $venta = Venta::findOrFail($id);
+            return response()->json($data = $venta, $status = 200);
+        } catch (\Throwable $th) {
+            return response()->json($data = ['message' => 'Error intentando cargar la venta'], $status = 500);
+        }
     }
 
     /**
@@ -62,9 +65,15 @@ class VentaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $model = new Venta();
         $editVenta = request()->all();
-        Venta::where('id', '=', $id)->update($editVenta);
-        return 'Venta editada correctamente!';
+        $validator = Validator::make($editVenta, $model->rules);
+        if ($validator->fails()) {
+            return response()->json($data = ['error' => $validator->errors()], $status = 500);
+        } else {
+            Venta::where('id', '=', $id)->update($editVenta);
+            return  response()->json($data = ['message' => 'Venta editada correctamente!'], $status = 202);
+        }
     }
 
     /**
@@ -75,7 +84,11 @@ class VentaController extends Controller
      */
     public function destroy($id)
     {
-        Venta::truncate($id);
-        return 'Venta eliminada correctamente!';
+        try {
+            Venta::truncate($id);
+            return response()->json($data = ['message' => 'Venta eliminado correctamente!'], $status = 500);
+        } catch (\Throwable $th) {
+            return response()->json($data = ['message' => 'Error intentando eliminar la venta'], $status = 500);
+        }
     }
 }

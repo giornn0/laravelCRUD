@@ -20,9 +20,9 @@ class ProductoController extends Controller
         if ($page and is_numeric($page)) {
             $datos = Producto::paginate(5);
         } else {
-            $datos['productos'] = Producto::all();
+            $datos = Producto::all();
         }
-        return response()->json($data = [$datos], $status = 200);
+        return response()->json($data = $datos, $status = 200);
     }
 
 

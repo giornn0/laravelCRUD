@@ -18,10 +18,10 @@ class ClienteController extends Controller
         $page = $request->query('page');
         if ($page and is_numeric($page)) {
             $datos = Cliente::paginate(5);
-            return response()->json($data = array($datos), $status = 200);
+            return response()->json($data = $datos, $status = 200);
         }
         $datos['clientes'] = Cliente::all();
-        return response()->json($data = array($datos), $status = 200);
+        return response()->json($data = $datos, $status = 200);
     }
 
     /**
