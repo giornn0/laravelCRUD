@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\EtiquetaProducto;
 
 class ProductoController extends Controller
 {
@@ -41,7 +40,7 @@ class ProductoController extends Controller
             return response()->json($data = ['error' => $validator->errors()]);
         } else {
             $etiquetas = request()->only('etiquetas');
-            $productoCreado = Producto::create($producto);
+            $productoCreado = Producto::create(request()->except('etiquetas'));
             foreach ($etiquetas as $id) {
                 $productoCreado->etiquetas()->attach($id);
             }
@@ -58,8 +57,8 @@ class ProductoController extends Controller
     public function show($id)
     {
         try {
-            $producto = Producto::findOrfail( $id);
-            $etiquetas = EtiquetaProducto::where('producto_id', '=', $id);
+            $producto = Producto::findOrfail($id);
+            $etiquetas = $producto->etiquetas()->allRelatedIds();
             return response()->json($data = [$producto, $etiquetas], $status = 200);
         } catch (\Throwable $th) {
             return response()->json($data = ['message' => 'Error intentando encontrar el producto'], $status = 404);
@@ -82,9 +81,9 @@ class ProductoController extends Controller
             return response()->json($data = ['error' => $validator->errors()]);
         } else {
             $etiquetas = request()->only('etiquetas');
-            Producto::where('id', '=', $id)->update(request()->except('etiquetas'));
-            EtiquetaProducto::where('product_id', '=', $id)->destroy();
-            $producto = Producto::findOrfail('id', '=', $id);
+            Producto::findOrfail($id)->update(request()->except('etiquetas'));
+            $producto = Producto::findOrfail($id);
+            $producto->etiquetas()->detach();
             foreach ($etiquetas as $etiqueta) {
                 $producto->etiquetas()->attach($etiqueta);
             }

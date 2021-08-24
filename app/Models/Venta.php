@@ -19,7 +19,7 @@ class Venta extends Model
     protected $fillable = ['cliente_id', 'monto', 'fecha'];
     public $rules = array(
         'cliente_id' => 'required|exists:clientes,id',
-        'monto' => 'required|integer',
+        'monto' => 'integer',
         'fecha' => 'required|date'
     );
 }
