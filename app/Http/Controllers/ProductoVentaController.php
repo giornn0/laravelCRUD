@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductoVenta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProductoVentaController extends Controller
@@ -16,8 +17,8 @@ class ProductoVentaController extends Controller
     public function index($id_venta)
     {
         try {
-            $datos = ProductoVenta::where('venta_id', '=', $id_venta);
-            return response()->json($data = $datos, $status = 200);
+            $datos = ProductoVenta::all()->where('venta_id','=',$id_venta);
+            return response()->json($datos, $status = 200);
         } catch (\Throwable $th) {
             return response()->json($data = ['message' => 'Error intentando encontrar los productos'], $status = 500);
         }
@@ -33,14 +34,13 @@ class ProductoVentaController extends Controller
     public function store(Request $request, $id_venta)
     {
         $productoVenta = request()->all();
-        $productoVenta['venta_id'] = $id_venta;
         $model = new ProductoVenta();
         $validator = Validator::make($productoVenta, $model->rules);
         if ($validator->fails()) {
             return response()->json($data = ['error' => $validator->errors()], $status = 500);
         } else {
-            ProductoVenta::create($productoVenta);
-            return response()->json($data = ['message' => 'Producto vargado correctamente en la venta'], $status = 201);
+            $prodCargado = ProductoVenta::create($productoVenta);
+            return response()->json($data = ['message' => 'Producto cargado correctamente en la venta','prodCargado'=>$prodCargado], $status = 201);
         }
     }
 

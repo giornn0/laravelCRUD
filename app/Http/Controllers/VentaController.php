@@ -35,8 +35,8 @@ class VentaController extends Controller
         if ($validator->fails()) {
             return response()->json($data = ['error' => $validator->errors()], $status = 500);
         } else {
-            Venta::create($venta);
-            return response()->json($data = ['message' => 'Venta cargada correctamente!'], $status = 201);
+            $ventaCargada = Venta::create($venta);
+            return response()->json($data = ['message' => 'Venta cargada correctamente!', 'venta'=>$ventaCargada], $status = 201);
         }
     }
 
@@ -71,7 +71,7 @@ class VentaController extends Controller
         if ($validator->fails()) {
             return response()->json($data = ['error' => $validator->errors()], $status = 500);
         } else {
-            Venta::where('id', '=', $id)->update($editVenta);
+            Venta::findOrFail($id)->update($editVenta);
             return  response()->json($data = ['message' => 'Venta editada correctamente!'], $status = 202);
         }
     }

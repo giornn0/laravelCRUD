@@ -16,4 +16,5 @@ class ProductoVenta extends Model
         'precio'=>'required|integer',
         'total'=>'required|integer'
     );
+    protected $table="producto_venta";
 }
