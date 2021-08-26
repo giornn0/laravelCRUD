@@ -72,12 +72,12 @@ class ClienteController extends Controller
         //
         $editCliente = request()->all();
         $model = new Cliente;
-        $validator = Validator($editCliente, $model->rules);
+        $validator = Validator($editCliente, $model->rulesUpdate);
         if ($validator->fails()) {
             return response()->json($data = ['error' => $validator->errors()]);
         } else {
-            Cliente::where('id', '=', $id)->update($editCliente);
-            return response()->json($data = ['messsage' => 'Cliente editado correctamente'], $status = 202);
+           $test= Cliente::findOrFail($id)->update($editCliente);
+            return response()->json($data = ['messsage' => 'Cliente editado correctamente','test'=>$test], $status = 202);
         }
     }
 

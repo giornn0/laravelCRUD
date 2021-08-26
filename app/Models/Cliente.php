@@ -13,6 +13,11 @@ class Cliente extends Model
         'nombre' => 'required|max:255',
         'apellido' => 'required|max:255',
     );
+    public $rulesUpdate = array(
+        'email' => 'required|exists:clientes|max:255',
+        'nombre' => 'required|max:255',
+        'apellido' => 'required|max:255',
+    );
 
 
     public function ventas()
