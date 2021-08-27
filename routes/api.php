@@ -35,11 +35,11 @@ Route::middleware(['cors'])->group(function () {
 
 
     Route::get('unlogged', function () {
-        return response()->json($data = ['mensaje' => 'No se encuentra logeado, por favor inicie sesion'], $status = 401);
+        return response()->json($data = ['message' => 'No se encuentra logeado, por favor inicie sesion'], $status = 401);
     });
     Route::delete('/logout/{id}', function ($id) {
         DB::delete('delete from personal_access_tokens where tokenable_id = ?', [$id]);
-        return response()->json($data = ['mensaje' => 'Sesion cerrada correctamente'], $status = 200);
+        return response()->json($data = ['message' => 'Sesion cerrada correctamente'], $status = 200);
     });
 
 
@@ -49,7 +49,7 @@ Route::middleware(['cors'])->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         //Verificar estado del loggin        
         Route::get('/logstatus', function () {
-            return response()->json($data = ['mensaje' => 'Usuario logeado', $status = 200]);
+            return response()->json($data = ['message' => 'Usuario logeado', $status = 200]);
         });
 
         //http://localhost:8000/api/clientes

@@ -77,7 +77,7 @@ class ClienteController extends Controller
             return response()->json($data = ['error' => $validator->errors()]);
         } else {
            $test= Cliente::findOrFail($id)->update($editCliente);
-            return response()->json($data = ['messsage' => 'Cliente editado correctamente','test'=>$test], $status = 202);
+            return response()->json($data = ['message' => 'Cliente editado correctamente','test'=>$test], $status = 202);
         }
     }
 
@@ -89,7 +89,7 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        Cliente::truncate($id);
+        Cliente::destroy($id);
         return response()->json($data = ['message' => 'Cliente eliminado correctamente'], $status = 200);
     }
 }
