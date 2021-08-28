@@ -85,8 +85,8 @@ class VentaController extends Controller
     public function destroy($id)
     {
         try {
-            Venta::truncate($id);
-            return response()->json($data = ['message' => 'Venta eliminado correctamente!'], $status = 500);
+            Venta::destroy($id);
+            return response()->json($data = ['message' => 'Venta eliminado correctamente!'], $status = 200);
         } catch (\Throwable $th) {
             return response()->json($data = ['message' => 'Error intentando eliminar la venta'], $status = 500);
         }
