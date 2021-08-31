@@ -27,8 +27,9 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'access_token' => $token,
+            'token' => $token,
             'token_type' => 'Bearer',
+            'id' => $user['id']
         ]);
     }
     public function login(Request $request)
@@ -41,13 +42,12 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
-        DB::delete('delete from personal_access_tokens where tokenable_id = ?', [$user['id']]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'access_token' => $token,
+            'token' => $token,
             'token_type' => 'Bearer',
-            'id_user' => $user['id']
+            'user' => $user['id']
         ]);
     }
 }

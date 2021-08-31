@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProductoController;
-use App\Http\Controllers\EtiquetaProductoController;
 use App\Http\Controllers\EtiquetaController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ProductoVentaController;
